@@ -4,6 +4,8 @@ import com.ashu.taskManager.entities.TaskEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,13 +13,14 @@ import java.util.Date;
 public class TaskService {
     private ArrayList<TaskEntity> tasks=new ArrayList<>();
     private int taskid=1;
+    private final SimpleDateFormat deadlineFormater =new SimpleDateFormat("yyyy-MM-dd");
 
-    public TaskEntity addtask(String title,String description,String deadline){
+    public TaskEntity addtask(String title,String description,String deadline) throws ParseException {
         TaskEntity task=new TaskEntity();
         task.setId(taskid);
         task.setTitle(title);
         task.setDescription(description);
-//        task.setDeadline(new Date(deadline));
+        task.setDeadline(deadlineFormater.parse(deadline));
         task.setIscomplete(false);
         tasks.add(task);
         taskid++;
@@ -34,6 +37,19 @@ public class TaskService {
                 return t;
         }
         return null;
+    }
+
+    public TaskEntity updateTask(int id,String description,String deadline,boolean iscomplete)throws ParseException{
+        TaskEntity task=getTaskById(id);
+        if(task==null)
+            return null;
+        if(description!=null)
+            task.setDescription(description);
+        if(deadline!=null)
+            task.setDeadline(deadlineFormater.parse(deadline));
+        task.setIscomplete(iscomplete);
+        return task;
+
     }
 
 }
