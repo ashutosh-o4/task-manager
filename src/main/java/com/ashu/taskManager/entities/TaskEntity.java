@@ -1,6 +1,7 @@
 package com.ashu.taskManager.entities;
 
 import java.util.Date;
+import java.util.List;
 
 
 public class TaskEntity {
@@ -49,4 +50,5 @@ public class TaskEntity {
     public void setTitle(String title) {
         this.title = title;
     }
+
 }

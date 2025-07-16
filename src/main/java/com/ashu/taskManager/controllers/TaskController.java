@@ -1,10 +1,13 @@
 package com.ashu.taskManager.controllers;
 
 import com.ashu.taskManager.DTOs.ErrorDTO;
+import com.ashu.taskManager.DTOs.TaskResponseDTO;
 import com.ashu.taskManager.DTOs.Taskdto;
 import com.ashu.taskManager.DTOs.UpdateTaskDTO;
 import com.ashu.taskManager.entities.TaskEntity;
+import com.ashu.taskManager.service.NotesService;
 import com.ashu.taskManager.service.TaskService;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +19,14 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final NotesService notesService;
+    private ModelMapper modelMapper=new ModelMapper();
 
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService,NotesService notesService) {
+        this.notesService=notesService;
         this.taskService = taskService;
     }
+
 
     @GetMapping()
     public ResponseEntity<List<TaskEntity>> getTask(){
@@ -28,12 +35,14 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskEntity> getTaskById(@PathVariable("id") Integer id){
+    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable("id") Integer id){
         var task=taskService.getTaskById(id);
+        var notes=notesService.getNotesForTask(id);
         if(task==null)
             return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(task);
+        var taskResponse=modelMapper.map(task, TaskResponseDTO.class);
+        taskResponse.setNotes(notes);
+        return ResponseEntity.ok(taskResponse);
     }
 
     @PostMapping("")
