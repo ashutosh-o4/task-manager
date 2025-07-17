@@ -63,7 +63,13 @@ public class TaskController {
 
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TaskEntity> deleteTask(@PathVariable("id") int id){
+        if(taskService.deleteTask(id)){
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleErrors(Exception e){

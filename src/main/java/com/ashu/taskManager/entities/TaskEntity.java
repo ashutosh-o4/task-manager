@@ -1,7 +1,6 @@
 package com.ashu.taskManager.entities;
 
 import java.util.Date;
-import java.util.List;
 
 
 public class TaskEntity {

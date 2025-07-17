@@ -1,13 +1,12 @@
 package com.ashu.taskManager.service;
 
 import com.ashu.taskManager.entities.TaskEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+ 
 
 @Service
 public class TaskService {
@@ -51,5 +50,11 @@ public class TaskService {
         return task;
 
     }
-
+    public boolean deleteTask(int id){
+        TaskEntity task=getTaskById(id);
+        if(task==null)
+        return false;
+        tasks.remove(task);
+        return true;
+    }
 }
