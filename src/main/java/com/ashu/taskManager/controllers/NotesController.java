@@ -34,8 +34,7 @@ public class NotesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<NotesEntity> deleteNoteForATask(@PathVariable("id") int taskId,
-                                                      @PathVariable("id") int noteId){
+    public ResponseEntity<NotesEntity> deleteNoteForATask(@PathVariable("taskId") int taskId,@PathVariable("id") int noteId){
         if(notesService.deleteNoteForTask(taskId,noteId)) {
             return ResponseEntity.noContent().build();
         }

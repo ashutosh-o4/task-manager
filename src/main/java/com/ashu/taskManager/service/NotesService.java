@@ -60,28 +60,11 @@ public class NotesService {
         return true;
     }
 
-    public boolean deleteNoteForTask(int taskId,int noteId){
-        TaskEntity task = taskService.getTaskById(taskId);
-        if (task == null) {
-            return false;
-        }
-
+    public boolean deleteNoteForTask(int taskId, int noteId) {
         TaskNotesHolder holder = taskNoteHolders.get(taskId);
         if (holder == null) {
             return false;
         }
-
-        List<NotesEntity> notes = holder.notes;
-
-        Iterator<NotesEntity> iterator = notes.iterator();
-        while (iterator.hasNext()) {
-            NotesEntity note = iterator.next();
-            if (note.getId() == noteId) {
-                iterator.remove(); // remove by ID match
-                return true;
-            }
-        }
-
-        return false;
+        return holder.notes.removeIf(note -> note.getId() == noteId);
     }
 }
