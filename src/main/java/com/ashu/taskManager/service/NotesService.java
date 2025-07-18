@@ -2,15 +2,17 @@ package com.ashu.taskManager.service;
 
 import com.ashu.taskManager.entities.NotesEntity;
 import com.ashu.taskManager.entities.TaskEntity;
+import org.springframework.scheduling.config.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
 public class NotesService {
-    private TaskService taskService=new TaskService();
+    private final TaskService taskService;
     private HashMap<Integer,TaskNotesHolder> taskNoteHolders=new HashMap<>();
 
     public NotesService(TaskService taskService){
@@ -50,4 +52,36 @@ public class NotesService {
         return note;
     }
 
+    public boolean deleteAllNoteForTask(int taskid){
+        TaskEntity task=taskService.getTaskById(taskid);
+        if(task==null)
+            return false;
+        taskNoteHolders.remove(taskid);
+        return true;
+    }
+
+    public boolean deleteNoteForTask(int taskId,int noteId){
+        TaskEntity task = taskService.getTaskById(taskId);
+        if (task == null) {
+            return false;
+        }
+
+        TaskNotesHolder holder = taskNoteHolders.get(taskId);
+        if (holder == null) {
+            return false;
+        }
+
+        List<NotesEntity> notes = holder.notes;
+
+        Iterator<NotesEntity> iterator = notes.iterator();
+        while (iterator.hasNext()) {
+            NotesEntity note = iterator.next();
+            if (note.getId() == noteId) {
+                iterator.remove(); // remove by ID match
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

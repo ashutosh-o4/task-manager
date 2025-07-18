@@ -1,6 +1,8 @@
 package com.ashu.taskManager.service;
 
 import com.ashu.taskManager.entities.TaskEntity;
+
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -13,6 +15,10 @@ public class TaskService {
     private ArrayList<TaskEntity> tasks=new ArrayList<>();
     private int taskid=1;
     private final SimpleDateFormat deadlineFormater =new SimpleDateFormat("yyyy-MM-dd");
+    private final NotesService notesService;
+    public TaskService(@Lazy NotesService notesService){
+        this.notesService=notesService;
+    }
 
     public TaskEntity addtask(String title,String description,String deadline) throws ParseException {
         TaskEntity task=new TaskEntity();
@@ -53,8 +59,9 @@ public class TaskService {
     public boolean deleteTask(int id){
         TaskEntity task=getTaskById(id);
         if(task==null)
-        return false;
+            return false;
         tasks.remove(task);
+        notesService.deleteAllNoteForTask(id);
         return true;
     }
 }

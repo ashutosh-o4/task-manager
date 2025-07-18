@@ -32,4 +32,13 @@ public class NotesController {
         var note=notesService.addNotesForTask(taskId,notesdto.getTitle(),notesdto.getBody());
         return ResponseEntity.ok(new NotesResponseDTO(taskId,note));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<NotesEntity> deleteNoteForATask(@PathVariable("id") int taskId,
+                                                      @PathVariable("id") int noteId){
+        if(notesService.deleteNoteForTask(taskId,noteId)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
